@@ -138,4 +138,17 @@ def test_show_defaults():
         headers=_headers)
     assert 200 == r.status_code, r.text
     assert 'volumes' in r.json()['quota_set']
--
+
+
+def test_delete():
+    _headers = headers()
+    r = requests.delete(
+        URL + '%s/os-quota-sets/%s' % (admin_tenant, demo_tenant),
+        headers=_headers)
+    assert 200 == r.status_code, r.text
+    value = 10 # default values for volumes
+    r = requests.get(
+        URL + '%s/os-quota-sets/%s' % (admin_tenant, demo_tenant),
+        headers=_headers)
+    assert 200 == r.status_code, r.text
+    assert value == r.json()['quota_set']['volumes']
