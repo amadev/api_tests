@@ -1,0 +1,8 @@
+URL = 'http://james:8776/v3/'
+AUTH_URL = 'http://james:35357/v2.0/tokens'
+USER = 'admin'
+PASS = 'admin'
+TENANT = 'admin'
+DEMO_USER = '142c8f51c05a4e9592f050d6d82e1f72'
+DEMO_TENANT = 'dd4b5e19a0e74bfb8a043744c6bf4318'
+ADMIN_TENANT = '26e9ece758dd449b96fff2e65fb48299'
