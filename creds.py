@@ -4,7 +4,8 @@ import json
 
 CINDER_URL = 'http://james:8776/v3/'
 NOVA_URL = 'http://james:8774/v2/'
-AUTH_URL = 'http://james:35357/v2.0/tokens'
+AUTH_URL = 'http://james:5000/v2.0/tokens'
+
 USER = 'admin'
 PASS = 'admin'
 TENANT = 'admin'
