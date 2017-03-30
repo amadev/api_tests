@@ -5,6 +5,7 @@ import json
 CINDER_URL = 'http://james:8776/v3/'
 NOVA_URL = 'http://james:8774/v2/'
 AUTH_URL = 'http://james:5000/v2.0/tokens'
+PL_URL = 'http://james/placement/'
 
 USER = 'admin'
 PASS = 'admin'
