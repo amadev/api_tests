@@ -6,14 +6,26 @@ from requests_toolbelt.utils import dump
 
 
 class PlacementClient(object):
+
+    KEYWORDS = [
+        'resource_classes',
+        'resource_providers',
+        'inventories',
+        'usages',
+        'aggregates'
+        'allocations'
+    ]
+
     def __init__(self, url=PL_URL[0:-1]):
         self.url = url
 
     def __getattr__(self, name):
-        if name not in ['get', 'post', 'put', 'delete']:
+        if name in ['get', 'post', 'put', 'delete']:
+            return lambda *args, **kwargs: self.call(name, *args, **kwargs)
+        elif name in self.KEYWORDS:
             return PlacementClient(self.url + '/' + name)
         else:
-            return lambda *args, **kwargs: self.call(name, *args, **kwargs)
+            raise RuntimeError('unknown keyword %s' % name)
 
     def __call__(self, *args):
         params = [self.url]
@@ -298,3 +310,44 @@ def test_delete_one():
         PL_URL + 'resource_providers/' + RP_UUID_NEW,
         headers=_headers)
     assert 204 == r.status_code, r.text
+
+
+def test_get_resource_classes():
+    _headers = headers()
+    # create new resource provider
+    r = requests.get(
+        PL_URL + 'resource_classes/DISK_GB',
+        headers=_headers,
+    )
+    print dump.dump_all(r)
+    # because of empty nova_api.resource_classes
+    assert 404 == r.status_code, r.text
+
+
+def test_get_inventory_by_class():
+    PLC.resource_providers(RP_UUID).inventories('VCPU').get()
+
+
+def test_update_inventory_by_class():
+    generation = PLC.resource_providers(RP_UUID).get()['generation']
+    PLC.resource_providers(RP_UUID).inventories('DISK_GB').put(
+        json={
+            'resource_provider_generation': generation,
+            'total': 50})
+
+# def test_delete_inventory_by_class():
+
+
+def test_client():
+    p = PLC.resource_providers(RP_UUID)
+    assert PL_URL + 'resource_providers/' + RP_UUID == p.url, p.url
+    p = PLC.resource_providers(RP_UUID).inventories()
+    assert PL_URL + 'resource_providers/' + \
+        RP_UUID + '/inventories' == p.url, p.url
+    p = PLC.resource_providers()
+    assert PL_URL + 'resource_providers'
+    p = PLC.resource_providers().inventories()
+    assert PL_URL + 'resource_providers/inventories'
+    func = PLC.resource_providers().get
+    assert RP_UUID == PLC.resource_providers().\
+        get()['resource_providers'][0]['uuid']
