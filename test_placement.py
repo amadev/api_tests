@@ -5,7 +5,35 @@ from creds import *
 from requests_toolbelt.utils import dump
 
 
-RP_UUID = '92637880-2d79-43c6-afab-d860886c6392'
+class PlacementClient(object):
+    def __init__(self, url=PL_URL[0:-1]):
+        self.url = url
+
+    def __getattr__(self, name):
+        if name not in ['get', 'post', 'put', 'delete']:
+            return PlacementClient(self.url + '/' + name)
+        else:
+            return lambda *args, **kwargs: self.call(name, *args, **kwargs)
+
+    def __call__(self, *args):
+        params = [self.url]
+        params.extend(args)
+        return PlacementClient('/'.join(params))
+
+    def call(self, method, *args, **kwargs):
+        _headers = headers()
+        print 'calling url', self.url
+        status_code = kwargs.pop('status_code', 200)
+        r = getattr(requests, method)(
+            self.url, headers=_headers, *args, **kwargs)
+        assert status_code == r.status_code, r.text
+        print dump.dump_all(r)
+        return r.json()
+
+
+PLC = PlacementClient()
+
+
 def get_resource_providers_uuids():
     _headers = headers()
     r = requests.get(PL_URL + 'resource_providers', headers=_headers)
