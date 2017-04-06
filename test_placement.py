@@ -132,7 +132,8 @@ def test_create_inventory():
     assert 201 == r.status_code, r.text
     # delete inventoriy
     r = requests.delete(
-        PL_URL + 'resource_providers/' + RP_UUID_NEW + '/inventories/PCI_DEVICE',
+        PL_URL + 'resource_providers/' + RP_UUID_NEW +
+        '/inventories/PCI_DEVICE',
         headers=_headers)
     assert 204 == r.status_code, r.text
     # delete resource provider
@@ -143,6 +144,7 @@ def test_create_inventory():
             "resource_provider_generation": 1,
         })
     assert 204 == r.status_code, r.text
+
 
 def test_generation_conflict():
     _headers = headers()
@@ -272,7 +274,8 @@ def test_delete_one():
     assert 201 == r.status_code, r.text
     # delete inventoriy
     r = requests.delete(
-        PL_URL + 'resource_providers/' + RP_UUID_NEW + '/inventories/PCI_DEVICE',
+        PL_URL + 'resource_providers/' +
+        RP_UUID_NEW + '/inventories/PCI_DEVICE',
         headers=_headers)
     assert 204 == r.status_code, r.text
     # request with resource class specification deletes that class only
