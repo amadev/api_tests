@@ -6,6 +6,13 @@ from requests_toolbelt.utils import dump
 
 
 RP_UUID = '92637880-2d79-43c6-afab-d860886c6392'
+def get_resource_providers_uuids():
+    _headers = headers()
+    r = requests.get(PL_URL + 'resource_providers', headers=_headers)
+    return [rp['uuid'] for rp in r.json()['resource_providers']]
+
+
+RP_UUID = get_resource_providers_uuids()[0]
 RP_UUID_NEW = '92637880-2d79-43c6-afab-d860886c6391'
 
 
