@@ -58,6 +58,7 @@ def test_add_tags():
     assert len(instances) > 0
     assert instances[0]['tags'] == []
 
+
 def test_put_empty_tag():
     _headers = headers()
     _headers.update({'X-OpenStack-Nova-API-Version': '2.42'})
@@ -87,5 +88,20 @@ def test_put_empty_tag():
         NOVA_URL + 'servers/' + instances[0]['id'] + '/tags',
         headers=_headers,
         json={"tags": ['', 'abc']})
+    print dump.dump_all(r)
+    assert 200 == r.status_code, r.text
+
+
+def test_os_hypervisors():
+    _headers = headers()
+    r = requests.get(
+        NOVA_URL + 'os-hypervisors',
+        headers=_headers)
+    print dump.dump_all(r)
+    assert 200 == r.status_code, r.text
+    _headers = headers()
+    r = requests.get(
+        NOVA_URL + 'os-hypervisors/detail',
+        headers=_headers)
     print dump.dump_all(r)
     assert 200 == r.status_code, r.text
