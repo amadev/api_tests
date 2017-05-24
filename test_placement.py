@@ -1,3 +1,4 @@
+import uuid
 import random
 import requests
 import json
@@ -40,6 +41,8 @@ class PlacementClient(object):
             self.url, headers=_headers, *args, **kwargs)
         assert status_code == r.status_code, r.text
         print dump.dump_all(r)
+        if not r.text:
+            return {}
         return r.json()
 
 
@@ -47,12 +50,12 @@ PLC = PlacementClient()
 
 
 def get_resource_providers_uuids():
-    _headers = headers()
-    r = requests.get(PL_URL + 'resource_providers', headers=_headers)
-    return [rp['uuid'] for rp in r.json()['resource_providers']]
+    r = PLC.resource_providers().get()
+    return [rp['uuid'] for rp in r['resource_providers']]
 
 
-RP_UUID = get_resource_providers_uuids()[0]
+RPS = get_resource_providers_uuids()
+RP_UUID = RPS[0]
 RP_UUID_NEW = '92637880-2d79-43c6-afab-d860886c6391'
 
 
@@ -69,6 +72,21 @@ def test_get_resource_providers():
     print r.json()
     assert 200 == r.status_code, r.text
 
+
+def test_create_resource_providers():
+    PLC.resource_providers().post(json={'name': 'Ceph Storage Pool'},
+                                  status_code=201)
+    id = str(uuid.uuid4())
+    PLC.resource_providers().post(json={'name': 'NFS Share',
+                                        'uuid': id},
+                                  status_code=201)
+    new = set(get_resource_providers_uuids()) - set(RPS)
+    PLC.resource_providers(list(new)[0]).get()
+    PLC.resource_providers(list(new)[0]).put(json={'name': 'Shared storage'})
+
+    assert 2 == len(new)
+    for id in new:
+        PLC.resource_providers(id).delete(status_code=204)
 
 def test_get_inventories():
     _headers = headers()
@@ -201,17 +219,16 @@ def test_generation_conflict():
         json={
             'resource_provider_generation': 1,
             'inventories': {
-                "DISK_GB": {
-                    "allocation_ratio": 2.0,
-                    "min_unit": 5,
-                    "reserved": 10,
-                    "total": 40
+                "VCPU": {
+                    "allocation_ratio": 10.0,
+                    "reserved": 2,
+                    "total": 64
                 },
-                "PCI_DEVICE": {
-                    "allocation_ratio": 1.0,
-                    "max_unit": 30,
-                    "step_size": 5,
-                    "total": 41
+                "MEMORY_MB": {
+                    "allocation_ratio": 2.0,
+                    "step_size": 4,
+                    "max_unit": 16,
+                    "total": 128
                 }
             }
         })
@@ -334,8 +351,6 @@ def test_update_inventory_by_class():
         json={
             'resource_provider_generation': generation,
             'total': 50})
-
-# def test_delete_inventory_by_class():
 
 
 def test_client():
