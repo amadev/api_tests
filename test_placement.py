@@ -37,10 +37,14 @@ class PlacementClient(object):
         _headers = headers()
         print 'calling url', self.url
         status_code = kwargs.pop('status_code', 200)
+        version = kwargs.pop('version', None)
+        if version:
+            _headers.update(
+                {'OpenStack-API-Version': 'placement %s' % version})
         r = getattr(requests, method)(
             self.url, headers=_headers, *args, **kwargs)
-        assert status_code == r.status_code, r.text
         print dump.dump_all(r)
+        assert status_code == r.status_code, r.text
         if not r.text:
             return {}
         return r.json()
@@ -81,7 +85,7 @@ def test_create_resource_providers():
                                         'uuid': id},
                                   status_code=201)
     new = set(get_resource_providers_uuids()) - set(RPS)
-    PLC.resource_providers(list(new)[0]).get()
+    PLC.resource_providers(list(new)[0]).get(version=1.6)
     PLC.resource_providers(list(new)[0]).put(json={'name': 'Shared storage'})
 
     assert 2 == len(new)
@@ -331,15 +335,25 @@ def test_delete_one():
 
 def test_get_resource_classes():
     _headers = headers()
-    # create new resource provider
+    _headers.update({'OpenStack-API-Version': 'placement 1.2'})
     r = requests.get(
-        PL_URL + 'resource_classes/DISK_GB',
+        PL_URL + 'resource_classes',
         headers=_headers,
     )
     print dump.dump_all(r)
     # because of empty nova_api.resource_classes
-    assert 404 == r.status_code, r.text
+    assert 200 == r.status_code, r.text
 
+def test_create_resource_class():
+    PLC.resource_classes().post(json={'name': 'CUSTOM_FPGA'},
+                                version='1.2', status_code=201)
+    classes = PLC.resource_classes().get(version='1.2')['resource_classes']
+    assert 1 == len(filter(lambda x: x['name'] == 'CUSTOM_FPGA', classes))
+    PLC.resource_classes('CUSTOM_FPGA').get(version='1.2')
+    PLC.resource_classes('CUSTOM_FPGA').put(
+        json={'name': 'CUSTOM_FPGA_V2'}, version='1.2')
+    PLC.resource_classes('CUSTOM_FPGA_V2').delete(
+        version='1.2', status_code=204)
 
 def test_get_inventory_by_class():
     PLC.resource_providers(RP_UUID).inventories('VCPU').get()
