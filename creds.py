@@ -1,10 +1,11 @@
 import requests
 import json
+from requests_toolbelt.utils import dump
 
 
 CINDER_URL = 'http://james:8776/v3/'
 NOVA_URL = 'http://james:8774/v2.1/'
-AUTH_URL = 'http://james:5000/v2.0/tokens'
+AUTH_URL = 'http://james/identity/v2.0/tokens'
 PL_URL = 'http://james/placement/'
 
 USER = 'admin'
@@ -24,5 +25,6 @@ def headers():
     r = requests.post(AUTH_URL,
                       data=json.dumps(payload),
                       headers=headers)
+    print dump.dump_all(r)
     headers['x-auth-token'] = r.json()['access']['token']['id']
     return headers
