@@ -13,7 +13,7 @@ class PlacementClient(object):
         'resource_providers',
         'inventories',
         'usages',
-        'aggregates'
+        'aggregates',
         'allocations'
     ]
 
@@ -59,6 +59,7 @@ def get_resource_providers_uuids():
 
 
 RPS = get_resource_providers_uuids()
+# this test assumes that at least one instance exists
 RP_UUID = RPS[0]
 RP_UUID_NEW = '92637880-2d79-43c6-afab-d860886c6391'
 
@@ -333,28 +334,6 @@ def test_delete_one():
     assert 204 == r.status_code, r.text
 
 
-def test_get_resource_classes():
-    _headers = headers()
-    _headers.update({'OpenStack-API-Version': 'placement 1.2'})
-    r = requests.get(
-        PL_URL + 'resource_classes',
-        headers=_headers,
-    )
-    print dump.dump_all(r)
-    # because of empty nova_api.resource_classes
-    assert 200 == r.status_code, r.text
-
-def test_create_resource_class():
-    PLC.resource_classes().post(json={'name': 'CUSTOM_FPGA'},
-                                version='1.2', status_code=201)
-    classes = PLC.resource_classes().get(version='1.2')['resource_classes']
-    assert 1 == len(filter(lambda x: x['name'] == 'CUSTOM_FPGA', classes))
-    PLC.resource_classes('CUSTOM_FPGA').get(version='1.2')
-    PLC.resource_classes('CUSTOM_FPGA').put(
-        json={'name': 'CUSTOM_FPGA_V2'}, version='1.2')
-    PLC.resource_classes('CUSTOM_FPGA_V2').delete(
-        version='1.2', status_code=204)
-
 def test_get_inventory_by_class():
     PLC.resource_providers(RP_UUID).inventories('VCPU').get()
 
@@ -380,3 +359,79 @@ def test_client():
     func = PLC.resource_providers().get
     assert RP_UUID == PLC.resource_providers().\
         get()['resource_providers'][0]['uuid']
+
+
+def test_get_resource_classes():
+    _headers = headers()
+    _headers.update({'OpenStack-API-Version': 'placement 1.2'})
+    r = requests.get(
+        PL_URL + 'resource_classes',
+        headers=_headers,
+    )
+    print dump.dump_all(r)
+    # because of empty nova_api.resource_classes
+    assert 200 == r.status_code, r.text
+
+
+def test_create_resource_class():
+    PLC.resource_classes().post(json={'name': 'CUSTOM_FPGA'},
+                                version='1.2', status_code=201)
+    classes = PLC.resource_classes().get(version='1.2')['resource_classes']
+    assert 1 == len(filter(lambda x: x['name'] == 'CUSTOM_FPGA', classes))
+    PLC.resource_classes('CUSTOM_FPGA').get(version='1.2')
+    PLC.resource_classes('CUSTOM_FPGA').put(
+        json={'name': 'CUSTOM_FPGA_V2'}, version='1.2')
+    PLC.resource_classes('CUSTOM_FPGA_V2').delete(
+        version='1.2', status_code=204)
+
+
+def test_put_resource_class():
+    PLC.resource_classes('CUSTOM_FPGA').put(version='1.7', status_code=201)
+    PLC.resource_classes('CUSTOM_FPGA').put(version='1.7', status_code=204)
+    PLC.resource_classes('CUSTOM_FPGA').delete(
+        version='1.2', status_code=204)
+
+
+def test_allocations():
+    PLC.resource_providers().post(
+        json={
+            'uuid': RP_UUID_NEW,
+            'name': 'Ceph Storage Pool'},
+        status_code=201)
+    PLC.resource_providers(RP_UUID_NEW).inventories().post(
+        json={
+            "resource_class": "DISK_GB",
+            "allocation_ratio": 1.0,
+            "max_unit": 1000,
+            "min_unit": 1,
+            "reserved": 0,
+            "step_size": 1,
+            "total": 1000
+        }, status_code=201
+    )
+    cid = str(uuid.uuid4())
+    PLC.allocations(cid).put(
+        json={
+            "allocations": [
+                {
+                    "resource_provider": {
+                        "uuid": RP_UUID
+                    },
+                    "resources": {
+                        'MEMORY_MB': 512, 'VCPU': 2
+                    },
+                },
+                {
+                    "resource_provider": {
+                        "uuid": RP_UUID_NEW
+                    },
+                    "resources": {
+                        'DISK_GB': 5
+                    },
+                },
+            ]
+        }, status_code=204)
+    PLC.allocations(cid).get()
+    PLC.resource_providers(RP_UUID_NEW).allocations().get()
+    PLC.allocations(cid).delete(status_code=204)
+    PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
