@@ -435,3 +435,18 @@ def test_allocations():
     PLC.resource_providers(RP_UUID_NEW).allocations().get()
     PLC.allocations(cid).delete(status_code=204)
     PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
+
+
+def test_aggregates():
+    PLC.resource_providers().post(
+        json={
+            'uuid': RP_UUID_NEW,
+            'name': 'Ceph Storage Pool'},
+        status_code=201)
+    PLC.resource_providers(RP_UUID_NEW).aggregates().put(
+        json=['42896e0d-205d-4fe3-bd1e-100924931787',
+              '5e08ea53-c4c6-448e-9334-ac4953de3cfa'],
+        version='1.1'
+    )
+    PLC.resource_providers(RP_UUID_NEW).aggregates().get(version='1.1')
+    PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
