@@ -14,7 +14,8 @@ class PlacementClient(object):
         'inventories',
         'usages',
         'aggregates',
-        'allocations'
+        'allocations',
+        'traits',
     ]
 
     def __init__(self, url=PL_URL[0:-1]):
@@ -449,4 +450,28 @@ def test_aggregates():
         version='1.1'
     )
     PLC.resource_providers(RP_UUID_NEW).aggregates().get(version='1.1')
+    PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
+
+
+def test_traits():
+    PLC.resource_providers().post(
+        json={
+            'uuid': RP_UUID_NEW,
+            'name': 'Ceph Storage Pool'},
+        status_code=201)
+    PLC.traits('CUSTOM_HW_FPGA_CLASS1').put(version='1.6', status_code=201)
+    PLC.traits('CUSTOM_HW_FPGA_CLASS2').put(version='1.6', status_code=201)
+    PLC.traits('CUSTOM_HW_FPGA_CLASS3').put(version='1.6', status_code=201)
+    PLC.traits().get(version='1.6')
+    PLC.traits('CUSTOM_HW_FPGA_CLASS1').get(version='1.6', status_code=204)
+    PLC.resource_providers(RP_UUID_NEW).traits().put(
+        json={'traits':
+              ['CUSTOM_HW_FPGA_CLASS1', 'CUSTOM_HW_FPGA_CLASS3'],
+              'resource_provider_generation': 0}, version='1.6')
+    PLC.resource_providers(RP_UUID_NEW).traits().get(version='1.6')
+    PLC.traits('CUSTOM_HW_FPGA_CLASS2').delete(version='1.6', status_code=204)
+    PLC.resource_providers(RP_UUID_NEW).traits().delete(
+        version='1.6', status_code=204)
+    PLC.traits('CUSTOM_HW_FPGA_CLASS1').delete(version='1.6', status_code=204)
+    PLC.traits('CUSTOM_HW_FPGA_CLASS3').delete(version='1.6', status_code=204)
     PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
