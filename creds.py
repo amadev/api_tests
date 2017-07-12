@@ -3,10 +3,12 @@ import json
 from requests_toolbelt.utils import dump
 
 
-CINDER_URL = 'http://james:8776/v3/'
-NOVA_URL = 'http://james:8774/v2.1/'
-AUTH_URL = 'http://james/identity/v2.0/tokens'
-PL_URL = 'http://james/placement/'
+HOST = 'james'
+
+CINDER_URL = 'http://%s:8776/v3/' % HOST
+NOVA_URL = 'http://%s:8774/v2.1/' % HOST
+AUTH_URL = 'http://%s/identity/v2.0/tokens' % HOST
+PL_URL = 'http://%s/placement/' % HOST
 
 USER = 'admin'
 PASS = 'admin'
