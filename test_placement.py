@@ -416,10 +416,10 @@ def test_allocations():
             "total": 1000
         }, status_code=201
     )
-    cid = str(uuid.uuid4())
+    cid1 = str(uuid.uuid4())
     project_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
-    PLC.allocations(cid).put(
+    PLC.allocations(cid1).put(
         json={
             "allocations": [
                 {
@@ -442,12 +442,37 @@ def test_allocations():
             "project_id": project_id,
             "user_id": user_id
         }, status_code=204, version='1.8')
-    PLC.allocations(cid).get(version='1.9')
+    cid2 = str(uuid.uuid4())
+    PLC.allocations(cid2).put(
+        json={
+            "allocations": [
+                {
+                    "resource_provider": {
+                        "uuid": RP_UUID
+                    },
+                    "resources": {
+                        'MEMORY_MB': 1024, 'VCPU': 1
+                    }
+                },
+                {
+                    "resource_provider": {
+                        "uuid": RP_UUID_NEW
+                    },
+                    "resources": {
+                        'DISK_GB': 1
+                    }
+                },
+            ],
+            "project_id": project_id,
+            "user_id": user_id
+        }, status_code=204, version='1.8')
+    PLC.allocations(cid1).get(version='1.9')
     PLC.resource_providers(RP_UUID_NEW).usages().get(version='1.9')
     PLC.usages().get(version='1.9',
                      params={'project_id': project_id, 'user_id': user_id})
-    PLC.resource_providers(RP_UUID_NEW).allocations().get(version='1.9')
-    PLC.allocations(cid).delete(status_code=204)
+    PLC.resource_providers(RP_UUID).allocations().get(version='1.9')
+    PLC.allocations(cid1).delete(status_code=204)
+    PLC.allocations(cid2).delete(status_code=204)
 
 
 def teardown_function(func):
