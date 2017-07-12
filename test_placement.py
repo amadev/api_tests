@@ -15,6 +15,7 @@ class PlacementClient(object):
         'usages',
         'aggregates',
         'allocations',
+        'allocation_candidates',
         'traits',
     ]
 
@@ -393,6 +394,11 @@ def test_put_resource_class():
         version='1.2', status_code=204)
 
 
+def test_allocations_not_found():
+    cid = str(uuid.uuid4())
+    PLC.allocations(cid).get(version='1.9')
+
+
 def test_allocations():
     PLC.resource_providers().post(
         json={
@@ -486,3 +492,7 @@ def test_traits():
     PLC.traits('CUSTOM_HW_FPGA_CLASS1').delete(version='1.6', status_code=204)
     PLC.traits('CUSTOM_HW_FPGA_CLASS3').delete(version='1.6', status_code=204)
     PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
+
+
+def test_allocation_candidates():
+    PLC.allocation_candidates().get(version='1.10')
