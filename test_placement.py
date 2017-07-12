@@ -436,16 +436,17 @@ def test_allocations():
             "project_id": project_id,
             "user_id": user_id
         }, status_code=204, version='1.8')
-    PLC.allocations(cid).get()
-    PLC.resource_providers(RP_UUID_NEW).usages().get()
+    PLC.allocations(cid).get(version='1.9')
+    PLC.resource_providers(RP_UUID_NEW).usages().get(version='1.9')
     PLC.usages().get(version='1.9',
                      params={'project_id': project_id, 'user_id': user_id})
-    PLC.resource_providers(RP_UUID_NEW).allocations().get()
+    PLC.resource_providers(RP_UUID_NEW).allocations().get(version='1.9')
     PLC.allocations(cid).delete(status_code=204)
 
 
-def teardown_function(test_allocations):
-    PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
+def teardown_function(func):
+    if func == test_allocations:
+        PLC.resource_providers(RP_UUID_NEW).delete(status_code=204)
 
 
 def test_aggregates():
