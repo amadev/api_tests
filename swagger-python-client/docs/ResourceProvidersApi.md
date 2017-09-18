@@ -5,7 +5,7 @@ All URIs are relative to *https://localhost:9000/placement*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_resource_provider**](ResourceProvidersApi.md#create_resource_provider) | **POST** /resource_providers | Create resource provider
-[**show_resource_providers**](ResourceProvidersApi.md#show_resource_providers) | **GET** /resource_providers | List resource providers
+[**list_resource_providers**](ResourceProvidersApi.md#list_resource_providers) | **GET** /resource_providers | List resource providers
 
 
 # **create_resource_provider**
@@ -60,8 +60,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **show_resource_providers**
-> InlineResponse200 show_resource_providers(resources_query=resources_query, member_of=member_of, uuid=uuid, name=name)
+# **list_resource_providers**
+> InlineResponse200 list_resource_providers(resources_query=resources_query, member_of=member_of, uuid=uuid, name=name)
 
 List resource providers
 
@@ -89,10 +89,10 @@ name = 'name_example' # str | The name of a resource provider. (optional)
 
 try: 
     # List resource providers
-    api_response = api_instance.show_resource_providers(resources_query=resources_query, member_of=member_of, uuid=uuid, name=name)
+    api_response = api_instance.list_resource_providers(resources_query=resources_query, member_of=member_of, uuid=uuid, name=name)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ResourceProvidersApi->show_resource_providers: %s\n" % e)
+    print("Exception when calling ResourceProvidersApi->list_resource_providers: %s\n" % e)
 ```
 
 ### Parameters

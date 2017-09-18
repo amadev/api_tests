@@ -24,20 +24,30 @@
 
 from __future__ import absolute_import
 
-# import models into sdk package
-from .models.body import Body
-from .models.body_1 import Body1
-from .models.inline_response_200 import InlineResponse200
-from .models.link import Link
-from .models.resource_provider import ResourceProvider
+import os
+import sys
+import unittest
 
-# import apis into sdk package
-from .apis.resource_provider_api import ResourceProviderApi
-from .apis.resource_providers_api import ResourceProvidersApi
+import swagger_client
+from swagger_client.rest import ApiException
+from swagger_client.models.body_1 import Body1
 
-# import ApiClient
-from .api_client import ApiClient
 
-from .configuration import Configuration
+class TestBody1(unittest.TestCase):
+    """ Body1 unit test stubs """
 
-configuration = Configuration()
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def testBody1(self):
+        """
+        Test Body1
+        """
+        model = swagger_client.models.body_1.Body1()
+
+
+if __name__ == '__main__':
+    unittest.main()

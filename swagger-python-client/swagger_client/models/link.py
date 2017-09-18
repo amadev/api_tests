@@ -75,6 +75,8 @@ class Link(object):
         :param href: The href of this Link.
         :type: str
         """
+        if href is None:
+            raise ValueError("Invalid value for `href`, must not be `None`")
 
         self._href = href
 
@@ -98,6 +100,8 @@ class Link(object):
         :param rel: The rel of this Link.
         :type: str
         """
+        if rel is None:
+            raise ValueError("Invalid value for `rel`, must not be `None`")
 
         self._rel = rel
 

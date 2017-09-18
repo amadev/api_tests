@@ -26,6 +26,7 @@ from __future__ import absolute_import
 
 # import models into model package
 from .body import Body
+from .body_1 import Body1
 from .inline_response_200 import InlineResponse200
 from .link import Link
 from .resource_provider import ResourceProvider

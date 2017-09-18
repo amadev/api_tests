@@ -56,14 +56,14 @@ swagger_client.configuration.api_key['x-auth-token'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # swagger_client.configuration.api_key_prefix['x-auth-token'] = 'Bearer'
 # create an instance of the API class
-api_instance = swagger_client.ResourceProvidersApi()
-body = swagger_client.Body() # Body | order placed for purchasing the pet
+api_instance = swagger_client.ResourceProviderApi()
+uuid = 'uuid_example' # str | The uuid of a resource provider.
 
 try:
-    # Create resource provider
-    api_instance.create_resource_provider(body)
+    # Delete resource provider
+    api_instance.delete_resource_provider(uuid)
 except ApiException as e:
-    print("Exception when calling ResourceProvidersApi->create_resource_provider: %s\n" % e)
+    print("Exception when calling ResourceProviderApi->delete_resource_provider: %s\n" % e)
 
 ```
 
@@ -73,13 +73,17 @@ All URIs are relative to *https://localhost:9000/placement*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*ResourceProviderApi* | [**delete_resource_provider**](docs/ResourceProviderApi.md#delete_resource_provider) | **DELETE** /resource_providers/{uuid} | Delete resource provider
+*ResourceProviderApi* | [**show_resource_provider**](docs/ResourceProviderApi.md#show_resource_provider) | **GET** /resource_providers/{uuid} | Show resource provider
+*ResourceProviderApi* | [**update_resource_provider**](docs/ResourceProviderApi.md#update_resource_provider) | **PUT** /resource_providers/{uuid} | Update resource provider
 *ResourceProvidersApi* | [**create_resource_provider**](docs/ResourceProvidersApi.md#create_resource_provider) | **POST** /resource_providers | Create resource provider
-*ResourceProvidersApi* | [**show_resource_providers**](docs/ResourceProvidersApi.md#show_resource_providers) | **GET** /resource_providers | List resource providers
+*ResourceProvidersApi* | [**list_resource_providers**](docs/ResourceProvidersApi.md#list_resource_providers) | **GET** /resource_providers | List resource providers
 
 
 ## Documentation For Models
 
  - [Body](docs/Body.md)
+ - [Body1](docs/Body1.md)
  - [InlineResponse200](docs/InlineResponse200.md)
  - [Link](docs/Link.md)
  - [ResourceProvider](docs/ResourceProvider.md)

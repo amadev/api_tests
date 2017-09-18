@@ -30,31 +30,39 @@ import unittest
 
 import swagger_client
 from swagger_client.rest import ApiException
-from swagger_client.apis.resource_providers_api import ResourceProvidersApi
+from swagger_client.apis.resource_provider_api import ResourceProviderApi
 
 
-class TestResourceProvidersApi(unittest.TestCase):
-    """ ResourceProvidersApi unit test stubs """
+class TestResourceProviderApi(unittest.TestCase):
+    """ ResourceProviderApi unit test stubs """
 
     def setUp(self):
-        self.api = swagger_client.apis.resource_providers_api.ResourceProvidersApi()
+        self.api = swagger_client.apis.resource_provider_api.ResourceProviderApi()
 
     def tearDown(self):
         pass
 
-    def test_create_resource_provider(self):
+    def test_delete_resource_provider(self):
         """
-        Test case for create_resource_provider
+        Test case for delete_resource_provider
 
-        Create resource provider
+        Delete resource provider
         """
         pass
 
-    def test_list_resource_providers(self):
+    def test_show_resource_provider(self):
         """
-        Test case for list_resource_providers
+        Test case for show_resource_provider
 
-        List resource providers
+        Show resource provider
+        """
+        pass
+
+    def test_update_resource_provider(self):
+        """
+        Test case for update_resource_provider
+
+        Update resource provider
         """
         pass
 
