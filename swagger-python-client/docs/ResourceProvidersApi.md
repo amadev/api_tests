@@ -1,6 +1,6 @@
 # swagger_client.ResourceProvidersApi
 
-All URIs are relative to *https://localhost:9000/placement*
+All URIs are relative to *https://example.com/placement*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

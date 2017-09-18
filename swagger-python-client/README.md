@@ -69,7 +69,7 @@ except ApiException as e:
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://localhost:9000/placement*
+All URIs are relative to *https://example.com/placement*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
