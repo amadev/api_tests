@@ -275,7 +275,7 @@ class ResourceProviderApi(object):
                                             _request_timeout=params.get('_request_timeout'),
                                             collection_formats=collection_formats)
 
-    def update_resource_provider(self, uuid, **kwargs):
+    def update_resource_provider(self, uuid, body, **kwargs):
         """
         Update resource provider
         Update the name of the resource provider identified by `{uuid}`.
@@ -286,24 +286,24 @@ class ResourceProviderApi(object):
         >>> def callback_function(response):
         >>>     pprint(response)
         >>>
-        >>> thread = api.update_resource_provider(uuid, callback=callback_function)
+        >>> thread = api.update_resource_provider(uuid, body, callback=callback_function)
 
         :param callback function: The callback function
             for asynchronous request. (optional)
         :param str uuid: The uuid of a resource provider. (required)
-        :param Body1 body: 
+        :param Body1 body:  (required)
         :return: ResourceProvider
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('callback'):
-            return self.update_resource_provider_with_http_info(uuid, **kwargs)
+            return self.update_resource_provider_with_http_info(uuid, body, **kwargs)
         else:
-            (data) = self.update_resource_provider_with_http_info(uuid, **kwargs)
+            (data) = self.update_resource_provider_with_http_info(uuid, body, **kwargs)
             return data
 
-    def update_resource_provider_with_http_info(self, uuid, **kwargs):
+    def update_resource_provider_with_http_info(self, uuid, body, **kwargs):
         """
         Update resource provider
         Update the name of the resource provider identified by `{uuid}`.
@@ -314,12 +314,12 @@ class ResourceProviderApi(object):
         >>> def callback_function(response):
         >>>     pprint(response)
         >>>
-        >>> thread = api.update_resource_provider_with_http_info(uuid, callback=callback_function)
+        >>> thread = api.update_resource_provider_with_http_info(uuid, body, callback=callback_function)
 
         :param callback function: The callback function
             for asynchronous request. (optional)
         :param str uuid: The uuid of a resource provider. (required)
-        :param Body1 body: 
+        :param Body1 body:  (required)
         :return: ResourceProvider
                  If the method is called asynchronously,
                  returns the request thread.
@@ -343,6 +343,9 @@ class ResourceProviderApi(object):
         # verify the required parameter 'uuid' is set
         if ('uuid' not in params) or (params['uuid'] is None):
             raise ValueError("Missing the required parameter `uuid` when calling `update_resource_provider`")
+        # verify the required parameter 'body' is set
+        if ('body' not in params) or (params['body'] is None):
+            raise ValueError("Missing the required parameter `body` when calling `update_resource_provider`")
 
 
         collection_formats = {}

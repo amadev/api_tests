@@ -115,7 +115,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_resource_provider**
-> ResourceProvider update_resource_provider(uuid, body=body)
+> ResourceProvider update_resource_provider(uuid, body)
 
 Update resource provider
 
@@ -137,11 +137,11 @@ swagger_client.configuration.api_key['x-auth-token'] = 'YOUR_API_KEY'
 # create an instance of the API class
 api_instance = swagger_client.ResourceProviderApi()
 uuid = 'uuid_example' # str | The uuid of a resource provider.
-body = swagger_client.Body1() # Body1 |  (optional)
+body = swagger_client.Body1() # Body1 | 
 
 try: 
     # Update resource provider
-    api_response = api_instance.update_resource_provider(uuid, body=body)
+    api_response = api_instance.update_resource_provider(uuid, body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ResourceProviderApi->update_resource_provider: %s\n" % e)
@@ -152,7 +152,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **uuid** | **str**| The uuid of a resource provider. | 
- **body** | [**Body1**](Body1.md)|  | [optional] 
+ **body** | [**Body1**](Body1.md)|  | 
 
 ### Return type
 
